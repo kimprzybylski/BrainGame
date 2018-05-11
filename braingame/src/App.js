@@ -25,7 +25,7 @@ class App extends Component {
         .from({ length: this.size })
         .map(() => Math.floor(Math.random() * this.max) + 1);
 
-    result = _.sum(_.sampleSize(this.buttonValues, this.numberOfButtons));
+    askedValue = _.sum(_.sampleSize(this.buttonValues, this.numberOfButtons));
 
     componentDidMount() {
         if (this.props.autoPlay) {
@@ -64,7 +64,7 @@ class App extends Component {
                     [ ...prevState.selectedIds, numberIndex ];
                 return {
                     selectedIds: newSelectedIds,
-                    status: this.calcGameStatus(newSelectedIds),
+                    status: this.findGameStatus(newSelectedIds),
                 };
             },
             () => {
@@ -74,7 +74,7 @@ class App extends Component {
             }
         );
     };
-    calcGameStatus = newSelectedIds => {
+    findGameStatus = newSelectedIds => {
         const sumSelected = newSelectedIds.reduce(
             (acc, curr) => acc + this.buttonValues[curr],
             0
@@ -83,7 +83,7 @@ class App extends Component {
             return 'playing';
         }
 
-        if (sumSelected === this.result) {
+        if (sumSelected === this.askedValue) {
             if (this.state.remainingSeconds > 10) {
                 this.props.sendWinningGamePoints(2);
             } else {
@@ -101,7 +101,7 @@ class App extends Component {
             <div className="app">
                 {status === 'playing' && <div className="timer">{remainingSeconds}</div>}
                 <div className="result" style={{ backgroundColor: colors[status] }}>
-                    {status === 'new' ? 'click on the start button' : this.result}
+                    {status === 'new' ? 'click on the start button' : this.askedValue}
                 </div>
                 <div className="buttons">
                     {this.buttonValues.map((value, index) =>
@@ -119,7 +119,7 @@ class App extends Component {
 
                     {['won', 'lost'].includes(status) && <button className="gameButton" onClick={this.props.onPlayAgain}>Play Again</button>}
                 </div>
-                    Click on {this.numberOfButtons} button so that the sum is {this.result} within {this.props.seconds} seconds.
+                    Click on {this.numberOfButtons} buttons so that the sum is {this.askedValue} within {this.props.seconds} seconds.
             </div>
         );
   }

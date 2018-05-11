@@ -22,7 +22,7 @@ class Game extends Component {
     render() {
         return (
             <div className="app">
-                Games won: {this.state.gamesWon}
+                Points: {this.state.gamesWon} Total games: {this.state.gameId}
             <App
                 key={this.state.gameId}
                 autoPlay={this.state.gameId > 1}
